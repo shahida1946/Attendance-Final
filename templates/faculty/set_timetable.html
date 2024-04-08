@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Set/Update Timetable</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* Custom CSS styles */
+    .timetable-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #f2f2f2;
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input[type="time"],
+    input[type="number"] {
+        padding: 8px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .back-btn {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .back-btn a {
+        padding: 10px 20px;
+        background-color: #ccc;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .back-btn a:hover {
+        background-color: #bbb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="timetable-container">
+    <h1>Set Timetable</h1>
+
+    {% if timetable_details %}
+    <table>
+        <tr>
+            <th>Current Timetable</th>
+        </tr>
+        <tr>
+            <td>Start Time:</td>
+            <td>{{ timetable_details.start_time }}</td>
+        </tr>
+        <tr>
+            <td>End Time:</td>
+            <td>{{ timetable_details.end_time }}</td>
+        </tr>
+        <tr>
+            <td>Lock Duration:</td>
+            <td>{{ timetable_details.lock_duration }} minutes</td>
+        </tr>
+    </table>
+    {% endif %}
+
+    <form action="{{ url_for('faculty.set_timetable') }}" method="post">
+        <table>
+            <tr>
+                <th colspan="2">Set Timetable</th>
+            </tr>
+            <tr>
+                <td><label for="start_time">Start Time:</label></td>
+                <td><input type="time" id="start_time" name="start_time" required></td>
+            </tr>
+            <tr>
+                <td><label for="end_time">End Time:</label></td>
+                <td><input type="time" id="end_time" name="end_time" required></td>
+            </tr>
+            <tr>
+                <td><label for="lock_duration">Lock Duration (minutes):</label></td>
+                <td><input type="number" id="lock_duration" name="lock_duration" required></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit">Set Timetable</button></td>
+            </tr>
+        </table>
+    </form>
+
+    <div class="back-btn">
+        <a href="{{ url_for('faculty.dashboard') }}">Back</a>
+    </div>
+</div>
+{% endblock %}

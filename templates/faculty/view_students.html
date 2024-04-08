@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>View Students</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* Custom CSS styles */
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .student-table th,
+    .student-table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .student-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .add-btn,
+    .back-btn {
+        display: inline-block;
+        padding: 12px 20px;
+        margin-top: 20px;
+        margin-right: 10px;
+        text-align: center;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .add-btn:hover,
+    .back-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>View Students</h2>
+
+    <!-- Add Students button -->
+    <a href="{{ url_for('admin.add_details') }}" class="add-btn">Add Students</a>
+
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Mobile</th>
+                <th>Department</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in student_details %}
+            <tr>
+                <td>{{ student.student_name }}</td>
+                <td>{{ student.student_email }}</td>
+                <td>{{ student.student_gender }}</td>
+                <td>{{ student.student_mobile }}</td>
+                <td>{{ student.department_name }}</td>
+                <td>{{ student.course_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back button -->
+    <a href="{{ url_for('faculty.dashboard') }}" class="back-btn">Back</a>
+</div>
+{% endblock %}

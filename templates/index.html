@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Guntur Engineering College</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    body {
+     margin: 0;
+     padding: 0;
+     font-family: Arial, sans-serif;
+     background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuz4jN5ILJflNR2Cw4AO8gSud5APQi34CP3MOLVGGhwA&s');
+     background-size: cover;
+     background-attachment: fixed;
+     user-select: none;
+     
+ }
+ 
+ .container {
+     position: relative; /* Set the container to a relative position */
+     max-width: 800px;
+     margin: 0 auto;
+     padding: 50px 20px;
+     text-align: center;
+ }
+ 
+ h1 {
+     font-size: 5em;
+     margin-bottom: 30px;
+     color: black;
+ }
+ 
+ .links {
+     position: fixed; /* Set the links to absolute position */
+     top: 20px; /* Adjust the top position */
+     right: 20px; /* Adjust the right position */
+ }
+ 
+ .links a {
+     text-decoration: none;
+     color: #171414;
+     font-size: 1.2em;
+     margin: 0 30px;
+     padding: 10px 20px;
+     border: 2px solid #0e0c0c;
+     border-radius: 20px;
+     transition: all 0.3s ease;
+ }
+ 
+ .links a:hover {
+     background-color: #1a1b18;
+     color: #fff;
+ }
+ 
+ </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Guntur Engineering College</h1>
+    <div class="links">
+        <a href='{{url_for("auth.signup")}}'>Signup</a>
+        <a href='{{url_for("auth.login")}}'>Login</a>
+    </div>
+</div>
+{% endblock %}

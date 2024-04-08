@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Student Attendance</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Student Attendance</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th>Days Present</th>
+                    <th>Days Absent</th>
+                    <th>Total Days</th>
+                    <th>Attendance Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in student_attendance %}
+                <tr>
+                    <td>{{ student.student_name }}</td>
+                    <td>{{ student.course_name }}</td>
+                    <td>{{ student.days_present }}</td>
+                    <td>{{ student.days_absent }}</td>
+                    <td>{{ student.total_days }}</td>
+                    <td>{{ "%.2f"|format(student.attendance_percentage) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ url_for('faculty.dashboard') }}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

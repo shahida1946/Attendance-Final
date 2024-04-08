@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Attendance Percentage</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Attendance Percentage</h2>
+
+    {% if attendance_details %}
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Days Attended</th>
+                <th>Total Days</th>
+                <th>Attendance Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_details %}
+            <tr>
+                <td>{{ record.course_name }}</td>
+                <td>{{ record.days_attended }}</td>
+                <td>{{ record.total_days }}</td>
+                <td>{{ "%.2f"|format(record.attendance_percentage) }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        No attendance records found.
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary mt-3">Back</a>
+</div>
+{% endblock %}

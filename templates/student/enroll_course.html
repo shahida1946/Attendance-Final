@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Enroll in a Course</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* Custom CSS styles */
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .btn-secondary {
+        margin-top: 20px;
+    }
+
+    .alert {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Enroll in a Course</h2>
+
+    {% if available_courses %}
+    <form method="POST" action="{{ url_for('student.enroll_course') }}">
+        <div class="form-group">
+            <label for="course_id">Select a Course:</label>
+            <select name="course_id" id="course_id" class="form-control" required>
+                {% for course in available_courses %}
+                <option value="{{ course.course_id }}">{{ course.course_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Enroll</button>
+    </form>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        No courses available for enrollment at the moment.
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Signup</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* Custom CSS styles */
+    .signup-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="signup-container">
+                <h2>Signup</h2>
+                <form action="{{ url_for('auth.signup') }}" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Select Gender:</label>
+                        <select class="form-control" name="gender" id="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile:</label>
+                        <input type="tel" id="mobile" class="form-control" name="mobile" placeholder="1234567890" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role:</label>
+                        <select class="form-control" id="role" name="role" required onchange="checkRole(this)">
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Student">Student</option>
+                            <option value="Faculty">Faculty</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="department_container">
+                        <label for="department">Department:</label>
+                        <select class="form-control" id="department" name="department_id" onchange="fetchCourses(this.value)">
+                            <option value="" selected disabled>Select Department</option>
+                            {% if departments %}
+                            {% for department in departments %}
+                            <option value="{{ department.department_id }}">{{ department.department_name }}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="form-group" id="course_container">
+                        <label for="Course">Course:</label>
+                        <select class="form-control" id="course" name="course_id">
+                            <option value="" selected disabled>Select Course</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function checkRole(selectElement) {
+        var departmentContainer = document.getElementById('department_container');
+        var courseContainer = document.getElementById('course_container');
+        var isAdmin = selectElement.value === 'Admin';
+        departmentContainer.style.display = isAdmin ? 'none' : 'block';
+        courseContainer.style.display = isAdmin ? 'none' : 'block';
+    }
+
+    function fetchCourses(deptId) {
+        if (!deptId) return;
+
+        fetch(`/auth/dept_course/${deptId}`)
+            .then(response => response.json())
+            .then(courses => {
+                const courseSelect = document.getElementById('course');
+                courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>';  // Clear existing options
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.course_id;
+                    option.textContent = course.course_name;
+                    courseSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching courses:', error));
+    }
+</script>
+{% endblock %}

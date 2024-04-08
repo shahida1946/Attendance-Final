@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Add Faculty</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* Custom CSS styles */
+    .faculty-form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="faculty-form-container">
+        {% if session.get('role')=='Admin' %}
+        <h2>Add Faculty/Student</h2>
+        <a href="{{url_for('admin.view_student')}}" class="btn btn-success">Back</a>
+        {% else %}
+        <h2>Add Student</h2>
+        <a href="{{url_for('faculty.view_students')}}" class="btn btn-success">Back</a>
+        {% endif %}
+        <form action="{{ url_for('admin.add_details') }}" method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Select Gender:</label>
+                <select class="form-control" name="gender" id="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile:</label>
+                <input type="tel" id="mobile" class="form-control" name="mobile" placeholder="1234567890" pattern="[0-9]{10}" required>
+            </div>
+            {% if session.get('role')=='Admin' %}
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="Faculty">Faculty</option>
+                    <option value="Student">Student</option>
+                </select>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select class="form-control" id="role" name="role" required>
+                    <!-- <option value="Faculty">Faculty</option> -->
+                    <option value="Student" {% if session.get("Role")=='Faculty' %} selected {%endif %}>Student</option>
+                </select>
+            {% endif %}
+            </div>
+            {% if session.get('role')=='Admin' %}
+            <div class="form-group" id="department_container">
+                <label for="department">Department:</label>
+                <select class="form-control" id="department" name="department_id" onchange="fetchCourses(this.value)">
+                    <option value="" selected disabled>Select Department</option>
+                    {% if departments %}
+                    {% for department in departments %}
+                    <option value="{{ department.department_id }}">{{ department.department_name }}</option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+            {% else %}
+            <div class="form-group" id="department_container">
+                <label for="department">Department:</label>
+                <select class="form-control" id="department" name="department_id">
+                    <!-- <option value="" selected disabled>Select Department</option> -->
+                    <option value="{{ session.get('faculty_details').department_id }}" selected>{{ session.get('faculty_details').department_name }}</option>
+                </select>
+            </div>
+            {% endif %}
+            {% if session.get('role')=='Admin' %}
+            <div class="form-group" id="course_container">
+                <label for="Course">Course:</label>
+                <select class="form-control" id="course" name="course_id">
+                    <option value="" selected disabled>Select Course</option>
+                </select>
+            </div>
+            {% else %}
+            <div class="form-group" id="course_container">
+                <label for="Course">Course:</label>
+                <select class="form-control" id="course" name="course_id">
+                    <option value="{{ session.get('faculty_details').course_id }}" selected>{{ session.get('faculty_details').course_name }}</option>
+                </select>
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Add Details</button>
+        </form>
+    </div>
+</div>
+
+<script>
+   
+
+    function fetchCourses(deptId) {
+        if (!deptId) return;
+
+        fetch(`/admin/dept_course/${deptId}`)
+            .then(response => response.json())
+            .then(courses => {
+                const courseSelect = document.getElementById('course');
+                courseSelect.innerHTML = '<option value="" disabled selected>Select Course</option>';  // Clear existing options
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.course_id;
+                    option.textContent = course.course_name;
+                    courseSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching courses:', error));
+    }
+</script>
+{% endblock %}
